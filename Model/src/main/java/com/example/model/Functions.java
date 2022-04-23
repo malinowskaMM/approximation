@@ -18,7 +18,7 @@ public class Functions {
     }
 
     public static double functionII(double x){
-        return Math.cos(x) + (x-1) * Math.sin(x);
+        return Math.cos(x) + ((x+1) * Math.sin(x));
     }
 
     public static double functionIII(double x){
