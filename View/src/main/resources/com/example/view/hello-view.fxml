@@ -19,12 +19,16 @@
         </rowConstraints>
          <children>
             <Label text="Wybierz wariant funkcji " />
-            <WebView fx:id="functionI" prefHeight="29.0" prefWidth="202.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <RadioButton mnemonicParsing="false" text="Wariant I" GridPane.rowIndex="1" />
-            <RadioButton mnemonicParsing="false" text="Wariant II" GridPane.rowIndex="2" />
-            <RadioButton mnemonicParsing="false" text="Wariant III" GridPane.rowIndex="3" />
-            <WebView fx:id="functionII" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <WebView fx:id="functionIII" prefHeight="34.0" prefWidth="243.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <WebView fx:id="functionIView" prefHeight="29.0" prefWidth="202.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <RadioButton fx:id="function1Button" mnemonicParsing="false" text="Wariant I" GridPane.rowIndex="1">
+                <toggleGroup>
+                    <ToggleGroup fx:id="wariant" />
+                </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="function2Button" mnemonicParsing="false" text="Wariant II" toggleGroup="$wariant" GridPane.rowIndex="2" />
+            <RadioButton fx:id="function3Button" mnemonicParsing="false" text="Wariant III" toggleGroup="$wariant" GridPane.rowIndex="3" />
+            <WebView fx:id="functionIIView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <WebView fx:id="functionIIIView" prefHeight="34.0" prefWidth="243.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
       </GridPane>
       <GridPane layoutX="23.0" layoutY="28.0" prefHeight="63.0" prefWidth="486.0">
@@ -38,8 +42,12 @@
         </rowConstraints>
          <children>
             <Label text="Wybierz metodę całkowania" />
-            <RadioButton mnemonicParsing="false" text="kwadratura Newtona-Cotesa oparta na trzech węzłach (wzór Simpsona)" wrapText="true" GridPane.rowIndex="1" />
-            <RadioButton mnemonicParsing="false" prefHeight="34.0" prefWidth="222.0" text="kwadratura Gaussa - wielomiany Legendre'a " wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <RadioButton fx:id="NewtonCotesButton" mnemonicParsing="false" onAction="#onNewtonCotesButtonPressed" text="kwadratura Newtona-Cotesa oparta na trzech węzłach (wzór Simpsona)" wrapText="true" GridPane.rowIndex="1">
+                <toggleGroup>
+                    <ToggleGroup fx:id="method" />
+                </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="GaussButton" mnemonicParsing="false" onAction="#onGaussButtonPressed" prefHeight="34.0" prefWidth="222.0" text="kwadratura Gaussa - wielomiany Legendre'a " toggleGroup="$method" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
       </GridPane>
       <GridPane layoutX="23.0" layoutY="344.0" prefHeight="89.0" prefWidth="236.0">
@@ -53,9 +61,9 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TextField prefHeight="26.0" prefWidth="97.0" GridPane.columnIndex="1" />
-            <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="beginField" prefHeight="26.0" prefWidth="97.0" GridPane.columnIndex="1" />
+            <TextField fx:id="endField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="epsField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label prefHeight="18.0" prefWidth="124.0" text="Początek przedziału" />
             <Label text="Koniec przedziału" GridPane.rowIndex="1" />
             <Label text="Epsilon" GridPane.rowIndex="2" />
@@ -74,10 +82,10 @@
          <children>
             <Label prefHeight="18.0" prefWidth="119.0" text="Liczba przebiegów " wrapText="true" />
             <Label text="Liczba węzłów" GridPane.columnIndex="2" />
-            <TextField GridPane.columnIndex="1" />
-            <TextField GridPane.columnIndex="3" />
+            <TextField fx:id="iterationNumberField" GridPane.columnIndex="1" />
+            <ChoiceBox fx:id="nodesNumberBox" prefWidth="150.0" GridPane.columnIndex="3" />
          </children>
       </GridPane>
-      <Button layoutX="335.0" layoutY="370.0" mnemonicParsing="false" prefHeight="63.0" prefWidth="94.0" text="Oblicz" />
+      <Button fx:id="calculateButton" layoutX="335.0" layoutY="370.0" mnemonicParsing="false" onAction="#onCalculateButtonPressed" prefHeight="63.0" prefWidth="94.0" text="Oblicz" />
    </children>
 </Pane>
