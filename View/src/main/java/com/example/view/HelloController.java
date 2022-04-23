@@ -1,5 +1,6 @@
 package com.example.view;
 
+import com.example.model.GaussLegendre;
 import com.example.model.NewtonCotes;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -28,9 +29,12 @@ public class HelloController {
     private int nodesNumberValue;
     private int iterationNumberValue;
     private double result;
+    private double[] nodesValues;
+    private double[] quadratureFactors;
     String resultString;
 
     NewtonCotes newtonCotes = new NewtonCotes();
+    GaussLegendre gaussLegendre = new GaussLegendre();
 
 
     @FXML private void initialize() {
@@ -114,7 +118,8 @@ public class HelloController {
             } else if (nodesNumberBox.getSelectionModel().isSelected(3)) {
                 nodesNumberValue = 5;
             }
-
+            nodesValues = gaussLegendre.getNodesValues(nodesNumberValue);
+            quadratureFactors = gaussLegendre.getQuadratureFactors(nodesNumberValue);
 
 
 
