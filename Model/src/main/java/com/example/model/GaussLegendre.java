@@ -2,7 +2,22 @@ package com.example.model;
 
 public class GaussLegendre {
 
-    //z wykładu
+    public double calculateGaussLegendre(double start, double end, String function, int nodesNumberValue, double[] roots, double[] weights) {
+        double result = 0;
+        for (int i = 0; i < nodesNumberValue; i++) {
+            double w = weights[i];
+            double x = transformX(roots[i], start, end);
+            double fxi = Functions.chooseFunction(function, x) * (end - start) / 2;
+            result += w * fxi;
+        }
+        return result;
+    }
+
+    private double transformX(double x, double start, double end) {
+        return ((end - start) * x + start + end) / 2;
+    }
+
+        //z wykładu
     public double[] getNodesValues(int nodesNumber) {
         double[] nodesValues = new double[nodesNumber];
         switch (nodesNumber) {

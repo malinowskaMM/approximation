@@ -120,10 +120,11 @@ public class HelloController {
             }
             nodesValues = gaussLegendre.getNodesValues(nodesNumberValue);
             quadratureFactors = gaussLegendre.getQuadratureFactors(nodesNumberValue);
-
-
-
-
+            result = gaussLegendre.calculateGaussLegendre(intervalBeginValue, intervalEndValue, chooseFunctionVariant(), nodesNumberValue,
+                    gaussLegendre.getNodesValues(nodesNumberValue),
+                    gaussLegendre.getQuadratureFactors(nodesNumberValue));
+            resultString = "Wynik obliczeń:    " + result;
+            openWarningDialog(resultString);
 
         }
         return 0;
