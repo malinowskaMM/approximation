@@ -1,17 +1,26 @@
 package com.example.view;
 
+import com.example.model.NewtonCotes;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.*;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 
 public class HelloController {
 
     @FXML private WebView functionIView;
     @FXML private WebView functionIIView;
     @FXML private WebView functionIIIView;
+    @FXML private WebView functionIVView;
+    @FXML private WebView functionVView;
     @FXML private RadioButton function1Button;
     @FXML private RadioButton function2Button;
     @FXML private RadioButton function3Button;
+    @FXML private RadioButton function4Button;
+    @FXML private RadioButton function5Button;
     @FXML private RadioButton NewtonCotesButton;
     @FXML private RadioButton GaussButton;
     @FXML private Button calculateButton;
@@ -19,41 +28,23 @@ public class HelloController {
     @FXML private TextField beginField;
     @FXML private TextField endField;
     @FXML private TextField epsField;
-    @FXML private ChoiceBox nodesNumberBox;
 
-    private double intervalBeginValue;
-    private double intervalEndValue;
-    private double epsValue;
-    private int nodesNumberValue;
-    private int iterationNumberValue;
-    private double result;
-    private double[] nodesValues;
-    private double[] quadratureFactors;
+
+
     String resultString;
 
     NewtonCotes newtonCotes = new NewtonCotes();
-    GaussLegendre gaussLegendre = new GaussLegendre();
 
 
     @FXML private void initialize() {
-        functionIView.getEngine().loadContent("<math display=\\\"block\\\"><mi>y</mi><mo>=</mo><msup><mi>x</mi><mn>5</mn></msup><msup><mi>+x</mi><mn>4</mn></msup><msup><mi>-2x</mi><mn>3</mn></msup><mi>-3</mi></math>");
-        functionIIView.getEngine().loadContent("<math display=\\\"block\\\"><mi>y</mi><mo>=</mo><mi>cos(x)</mi><mi>+</mi><mi>(x+1)sin(x)</mi></math>");
-        functionIIIView.getEngine().loadContent("<math display=\\\"block\\\"><mi>y</mi><mo>=</mo><mi>|</mi><msup><mi>cos(x)</mi><mn>2</mn></msup><mi>+1</mi><mi>|</mi></math>");
-        nodesNumberBox.getItems().add("2");
-        nodesNumberBox.getItems().add("3");
-        nodesNumberBox.getItems().add("4");
-        nodesNumberBox.getItems().add("5");
+        functionIView.getEngine().loadContent("<math display=\\\"block\\\"><mi>y</mi><mo>=</mo><mi>2x+1</mi></math>");
+        functionIIView.getEngine().loadContent("<math display=\\\"block\\\"><mi>y</mi><mo>=</mo><mi>|x|</mi></math>");
+        functionIIIView.getEngine().loadContent("<math display=\\\"block\\\"><mi>y</mi><mo>=</mo><msup><mi>x</mi><mn>5</mn></msup><mi>+</mi><msup><mi>x</mi><mn>4</mn></msup><mi>-2</mi><msup><mi>x</mi><mn>3</mn></msup><mi>-3</mi></math>");
+        functionIVView.getEngine().loadContent("<math display=\\\"block\\\"><mi>y</mi><mo>=</mo><mi>cos(x)</mi></math>");
+        functionVView.getEngine().loadContent("<math display=\\\"block\\\"><mi>y</mi><mo>=</mo><mi>|cos(x)+1|+</mi><msup><mi>x</mi><mn>3</mn></msup><mi>+1</mi></math>");
+
     }
 
-    @FXML private void onNewtonCotesButtonPressed() {
-        nodesNumberBox.setDisable(true);
-        iterationNumberField.setDisable(false);
-    }
-
-    @FXML private void onGaussButtonPressed() {
-        nodesNumberBox.setDisable(false);
-        iterationNumberField.setDisable(true);
-    }
 
     private String chooseFunctionVariant() {
         if(function1Button.isSelected()){
@@ -62,6 +53,10 @@ public class HelloController {
             return "functionII";
         } else if (function3Button.isSelected()) {
             return "functionIII";
+        } else if (function4Button.isSelected()) {
+            return "functionIV";
+        } else if (function5Button.isSelected()) {
+            return "functionV";
         } return null;
     }
 
@@ -92,11 +87,45 @@ public class HelloController {
     }
 
 
+    @FXML
+    protected void onGraphButtonPressed() {
+        double firstPoint = 0;
+        double lastPoint = 0;
+        if (beginField.getText().matches("^[+-]?(([1-9]\\d*)|0)(\\.\\d+)?")) {
+            firstPoint = Double.parseDouble(beginField.getText());
+        } else {
+            openWarningDialog("Zły format podczas wprowadzania poczatku przedziału");
+        }
+        if (endField.getText().matches("^[+-]?(([1-9]\\d*)|0)(\\.\\d+)?")) {
+            lastPoint = Double.parseDouble(endField.getText());
+        } else {
+            openWarningDialog("Zły format podczas wprowadzania końca przedziału");
+        }
+        if(firstPoint > lastPoint) {
+            double temp = firstPoint;
+            firstPoint = lastPoint;
+            lastPoint = temp;
+        }
+        String function = chooseFunctionVariant();
+        LineChart<Number, Number> lineChart = new LineChart<>(new NumberAxis(), new NumberAxis());
+
+        lineChart.setAnimated(false);
+        lineChart.setCreateSymbols(true);
+        //lineChart.getData().addAll(nodesSeries, originalSeries, interpolationSeries);
+
+        Scene scene = new Scene(lineChart, 500, 400);
+        scene.getStylesheets().add(getClass().getResource("chart.css").toExternalForm());
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.show();
+    }
+
+
     @FXML private int onCalculateButtonPressed() {
         if(!function1Button.isSelected() && !function2Button.isSelected() && !function3Button.isSelected()) {
             openWarningDialog("Nie wybrano funkcji");
             return -1;
-        }
+        }/*
         intervalBeginValue = formatDoubleInputField(beginField);
         intervalEndValue = formatDoubleInputField(endField);
         epsValue= formatDoubleInputField(epsField);
@@ -106,25 +135,7 @@ public class HelloController {
             //nie wiem co zrobic z tym eps tutaj
             resultString = "Wynik obliczeń:    " + result;
             openWarningDialog(resultString);
-        } else if(GaussButton.isSelected()){
-            if(nodesNumberBox.getSelectionModel().isSelected(0)) {
-                nodesNumberValue = 2;
-            } else if (nodesNumberBox.getSelectionModel().isSelected(1)) {
-                nodesNumberValue = 3;
-            } else if (nodesNumberBox.getSelectionModel().isSelected(2)) {
-                nodesNumberValue = 4;
-            } else if (nodesNumberBox.getSelectionModel().isSelected(3)) {
-                nodesNumberValue = 5;
-            }
-            nodesValues = gaussLegendre.getNodesValues(nodesNumberValue);
-            quadratureFactors = gaussLegendre.getQuadratureFactors(nodesNumberValue);
-            result = gaussLegendre.calculateGaussLegendre(intervalBeginValue, intervalEndValue, chooseFunctionVariant(), nodesNumberValue,
-                    gaussLegendre.getNodesValues(nodesNumberValue),
-                    gaussLegendre.getQuadratureFactors(nodesNumberValue));
-            resultString = "Wynik obliczeń:    " + result;
-            openWarningDialog(resultString);
-
-        }
+        }*/
         return 0;
     }
 

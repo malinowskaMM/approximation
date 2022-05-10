@@ -13,7 +13,7 @@ public class HelloApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 484, 474);
         stage.setResizable(false);
-        stage.setTitle("MNiO - Zad 4 | Banasiak 236494, Malinowska 236596");
+        stage.setTitle("MNiO - Zad 5 | Banasiak 236494, Malinowska 236596");
         stage.setScene(scene);
         stage.show();
     }
