@@ -1,7 +1,5 @@
 package com.example.view;
 
-import com.example.model.GaussLegendre;
-import com.example.model.NewtonCotes;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.web.WebView;
