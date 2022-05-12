@@ -5,7 +5,7 @@ public class Functions {
 
     public static double chooseFunction(String function, double x) {
         return switch (function) {
-            case "functionI" -> functionI(x);
+            case "functionI" -> functionI(x) ;
             case "functionII" -> functionII(x);
             case "functionIII" -> functionIII(x);
             case "functionIV" -> functionIV(x);

@@ -31,8 +31,8 @@
             <RadioButton fx:id="function3Button" mnemonicParsing="false" text="Wariant III" toggleGroup="$wariant" GridPane.rowIndex="3" />
             <WebView fx:id="functionIIView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <WebView fx:id="functionIIIView" prefHeight="34.0" prefWidth="243.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <RadioButton fx:id="function4Button" mnemonicParsing="false" text="Wariant IV" GridPane.rowIndex="4" />
-            <RadioButton fx:id="function5Button" mnemonicParsing="false" text="Wariant V" GridPane.rowIndex="5" />
+            <RadioButton fx:id="function4Button" mnemonicParsing="false" text="Wariant IV" toggleGroup="$wariant" GridPane.rowIndex="4" />
+            <RadioButton fx:id="function5Button" mnemonicParsing="false" text="Wariant V" toggleGroup="$wariant" GridPane.rowIndex="5" />
             <WebView fx:id="functionIVView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <WebView fx:id="functionVView" prefHeight="47.0" prefWidth="293.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
          </children>
@@ -51,11 +51,11 @@
          <children>
             <TextField fx:id="beginField" prefHeight="26.0" prefWidth="97.0" GridPane.columnIndex="1" />
             <TextField fx:id="endField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField fx:id="epsField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="levelField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label text="Początek przedziału aproksymacji" />
             <Label text="Koniec przedziału aproksymacji" GridPane.rowIndex="1" />
             <Label text="Stopień wielomianu aproksymującego" GridPane.rowIndex="2" />
-            <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="iterationNumberField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Label text="Liczba przedziałów kwadratury Newtona-Cotesa " GridPane.rowIndex="3" />
          </children>
       </GridPane>

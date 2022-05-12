@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
@@ -21,17 +22,19 @@ public class HelloController {
     @FXML private RadioButton function3Button;
     @FXML private RadioButton function4Button;
     @FXML private RadioButton function5Button;
-    @FXML private RadioButton NewtonCotesButton;
-    @FXML private RadioButton GaussButton;
-    @FXML private Button calculateButton;
-    @FXML private TextField iterationNumberField;
+
     @FXML private TextField beginField;
     @FXML private TextField endField;
-    @FXML private TextField epsField;
+    @FXML private TextField iterationNumberField;
+    @FXML private TextField levelField;
 
-
+    double intervalBeginValue;
+    double intervalEndValue;
+    int iterationNumberValue;
+    int levelValue;
 
     String resultString;
+    double result;
 
     NewtonCotes newtonCotes = new NewtonCotes();
 
@@ -88,33 +91,38 @@ public class HelloController {
 
 
     @FXML
-    protected void onGraphButtonPressed() {
-        double firstPoint = 0;
-        double lastPoint = 0;
-        if (beginField.getText().matches("^[+-]?(([1-9]\\d*)|0)(\\.\\d+)?")) {
-            firstPoint = Double.parseDouble(beginField.getText());
-        } else {
-            openWarningDialog("Zły format podczas wprowadzania poczatku przedziału");
-        }
-        if (endField.getText().matches("^[+-]?(([1-9]\\d*)|0)(\\.\\d+)?")) {
-            lastPoint = Double.parseDouble(endField.getText());
-        } else {
-            openWarningDialog("Zły format podczas wprowadzania końca przedziału");
-        }
+    protected void onGraphButtonPressed(double firstPoint, double lastPoint, int level, int intervals) {
         if(firstPoint > lastPoint) {
             double temp = firstPoint;
             firstPoint = lastPoint;
             lastPoint = temp;
         }
         String function = chooseFunctionVariant();
+        XYChart.Series series =  new XYChart.Series();
+        series.setName("Calculated function");
+        int resolution = 500;
+        double[] xPos = new double[resolution];
+        double[] yPos = new double[resolution];
+        double p = firstPoint;
+        double increment = (lastPoint - firstPoint) / resolution;
+        for (int i = 0; i < resolution; i++) {
+            xPos[i] = p;
+            System.out.println(xPos[i]);
+            yPos[i] = newtonCotes.calculateFunction(level, xPos[i], intervals, function, firstPoint, lastPoint);
+            System.out.println(yPos[i]);
+            series.getData().add(new XYChart.Data(p, yPos[i]));
+            p += increment;
+        }
+
+
         LineChart<Number, Number> lineChart = new LineChart<>(new NumberAxis(), new NumberAxis());
 
         lineChart.setAnimated(false);
         lineChart.setCreateSymbols(true);
-        //lineChart.getData().addAll(nodesSeries, originalSeries, interpolationSeries);
+        lineChart.getData().addAll(series);
 
         Scene scene = new Scene(lineChart, 500, 400);
-        scene.getStylesheets().add(getClass().getResource("chart.css").toExternalForm());
+        //scene.getStylesheets().add(getClass().getResource("chart.css").toExternalForm());
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.show();
@@ -122,20 +130,16 @@ public class HelloController {
 
 
     @FXML private int onCalculateButtonPressed() {
-        if(!function1Button.isSelected() && !function2Button.isSelected() && !function3Button.isSelected()) {
+        if(!function1Button.isSelected() && !function2Button.isSelected() && !function3Button.isSelected()
+                && !function4Button.isSelected() && !function5Button.isSelected()) {
             openWarningDialog("Nie wybrano funkcji");
             return -1;
-        }/*
+        }
         intervalBeginValue = formatDoubleInputField(beginField);
         intervalEndValue = formatDoubleInputField(endField);
-        epsValue= formatDoubleInputField(epsField);
-        if(NewtonCotesButton.isSelected()){
-            iterationNumberValue = formatIntInputField(iterationNumberField);
-            result = newtonCotes.calculateNewtonCotes(intervalBeginValue, intervalEndValue, chooseFunctionVariant(), iterationNumberValue, epsValue);
-            //nie wiem co zrobic z tym eps tutaj
-            resultString = "Wynik obliczeń:    " + result;
-            openWarningDialog(resultString);
-        }*/
+        iterationNumberValue = formatIntInputField(iterationNumberField);
+        levelValue = formatIntInputField(levelField);
+        onGraphButtonPressed(intervalBeginValue, intervalEndValue, levelValue,iterationNumberValue);
         return 0;
     }
 
