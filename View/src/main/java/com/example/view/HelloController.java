@@ -123,7 +123,7 @@ public class HelloController {
             seriesF.getData().add(new XYChart.Data(p, yPosFunction[i]));
             double result = yPos[i];
             double resultF = yPosFunction[i];
-            error += Math.pow(resultF - result, 2);
+            error += Math.abs(resultF - result);
 
             p += increment;
         }
@@ -142,7 +142,7 @@ public class HelloController {
         stage.setScene(scene);
         stage.show();
 
-        error = Math.sqrt(error);
+        error = Math.abs(error/500);
         openWarningDialog("Błąd aproksymacji: " + error);
     }
 
