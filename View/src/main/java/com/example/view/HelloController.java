@@ -74,12 +74,15 @@ public class HelloController {
     }
 
     private double formatDoubleInputField(TextField field) {
-        if (field.getText().matches("^[+-]?(([1-9]\\d*)|0)(\\.\\d+)?")) {
+        if (field.getText().matches("^[+-]?(([1-9]\\d*)|0)(\\.\\d+)?")
+                && (Double.parseDouble(field.getText()) < 1) && (Double.parseDouble(field.getText()) > -1) ) {
             return Double.parseDouble(field.getText());
         }
         openWarningDialog("Zły format.");
         return -1;
     }
+
+
 
     private int formatIntInputField(TextField field) {
         if (field.getText().matches("^[0-9]*[1-9][0-9]*$")) {
@@ -109,7 +112,7 @@ public class HelloController {
             xPos[i] = p;
             System.out.println(xPos[i]);
             yPos[i] = newtonCotes.calculateFunction(level, xPos[i], intervals, function, firstPoint, lastPoint);
-            System.out.println(yPos[i]);
+            //System.out.println(yPos[i]);
             series.getData().add(new XYChart.Data(p, yPos[i]));
             p += increment;
         }
@@ -118,7 +121,7 @@ public class HelloController {
         LineChart<Number, Number> lineChart = new LineChart<>(new NumberAxis(), new NumberAxis());
 
         lineChart.setAnimated(false);
-        lineChart.setCreateSymbols(true);
+        lineChart.setCreateSymbols(false);
         lineChart.getData().addAll(series);
 
         Scene scene = new Scene(lineChart, 500, 400);
@@ -139,6 +142,10 @@ public class HelloController {
         intervalEndValue = formatDoubleInputField(endField);
         iterationNumberValue = formatIntInputField(iterationNumberField);
         levelValue = formatIntInputField(levelField);
+        if (intervalBeginValue == -1 || intervalEndValue == -1 || iterationNumberValue == -1 || levelValue == -1) {
+            openWarningDialog("Wybrano niepoprawne parametry zdania");
+            return -1;
+        }
         onGraphButtonPressed(intervalBeginValue, intervalEndValue, levelValue,iterationNumberValue);
         return 0;
     }

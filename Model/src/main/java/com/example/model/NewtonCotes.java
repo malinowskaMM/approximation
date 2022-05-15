@@ -9,7 +9,7 @@ public class NewtonCotes {
         return (end-begin)/intervalsNumber;
     }
 
-    double czebyszewFunctionT(double x, int level) {
+    double czebyszewFunctionT(double x, int level, double begin, double end) {
         if(level==0)
         {
             return 1;
@@ -18,16 +18,14 @@ public class NewtonCotes {
         {
             return x;
         }
-        return 1.0/2 * (Math.pow(x+Math.sqrt(Math.pow(x,2)-1),level) +  Math.pow(x-Math.sqrt(Math.pow(x,2)-1),level));
+        double result = 2*x*czebyszewFunctionT(x, level-1, begin, end)-czebyszewFunctionT(x, level-2, begin, end);
+        return result;
     }
 
-    double czebyszewFactorsT(double x, int level)
-    {
-        return (2 * x * czebyszewFunctionT(x, level-1) - czebyszewFunctionT(x, level-2));
-    }
 
-    public double chooseFunctionPackage(String function, double x, int level) {
-        return Functions.chooseFunction(function,x)*czebyszewFactorsT(x, level)*(1/Math.sqrt(1-Math.pow(x,2)));
+    public double chooseFunctionPackage(String function, double x, int level, double begin, double end) {
+        double result = Functions.chooseFunction(function,x)*czebyszewFunctionT(x, level, begin, end)*(1/Math.sqrt(1-Math.pow( x,2)));
+        return result;
     }
 
     public double calculateA(int level, double begin, double end, int N, String function) {
@@ -40,14 +38,17 @@ public class NewtonCotes {
 
         for(int i = 1; i <= N; i++) {
             splitPoint = begin + i * pointsDistance;
-            sumMiddlePointsValues += chooseFunctionPackage(function, splitPoint - pointsDistance/2, level);
+            sumMiddlePointsValues += chooseFunctionPackage(function, splitPoint - pointsDistance/2, level, begin, end);
 
             if(i < N) {
-                result += chooseFunctionPackage(function, splitPoint, level);
+                result += chooseFunctionPackage(function, splitPoint, level, begin, end);
             }
 
         }
-        result = pointsDistance / 6 * (chooseFunctionPackage(function, begin, level)+ chooseFunctionPackage(function, end, level)+2*result+4*sumMiddlePointsValues);
+        result = pointsDistance / 6 * (chooseFunctionPackage(function, begin, level, begin, end)
+                + chooseFunctionPackage(function, end, level, begin, end)
+                +2*result
+                +4*sumMiddlePointsValues);
 
         return (2/Math.PI)*result;
     }
@@ -56,11 +57,11 @@ public class NewtonCotes {
         double result = 0;
         for(int i = 0; i < level; i++) {
             if(i == 0) {
-                result += (calculateA(i, begin, end, N, function)/2)*czebyszewFactorsT(x, i);
-                System.out.println(result);
+                result += (calculateA(i, begin, end, N, function)/2)*czebyszewFunctionT(x, i, begin, end);
+                //System.out.println(result);
             }
-            result += calculateA(i, begin, end, N, function)*czebyszewFactorsT(x, i);
-            System.out.println(result);
+            result += calculateA(i, begin, end, N, function)*czebyszewFunctionT(x, i, begin, end);
+            //System.out.println(result);
         }
         return result;
     }
