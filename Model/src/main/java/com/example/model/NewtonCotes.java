@@ -8,6 +8,12 @@ public class NewtonCotes {
     double splitInterval(double begin, double end, int intervalsNumber) {
         return (end-begin)/intervalsNumber;
     }
+    double calculateNodes(double begin, double end, int m, int n) {
+        return 1.0/2*((end-begin)*Math.cos(((2.0*m+1)/(2*n+2))*Math.PI)+(end+begin));
+    }
+
+
+
 
     double czebyszewFunctionT(double x, int level, double begin, double end) {
         if(level==0)
@@ -55,14 +61,21 @@ public class NewtonCotes {
 
     public double calculateFunction(int level, double x, int N, String function, double begin, double end) {
         double result = 0;
+        List<Double> coefficients = new ArrayList<>();
         for(int i = 0; i < level; i++) {
+            double r;
             if(i == 0) {
-                result += (calculateA(i, begin, end, N, function)/2)*czebyszewFunctionT(x, i, begin, end);
+                r = (calculateA(i, begin, end, N, function) / 2);
                 //System.out.println(result);
-            }
-            result += calculateA(i, begin, end, N, function)*czebyszewFunctionT(x, i, begin, end);
-            //System.out.println(result);
+            } else {
+                r = calculateA(i, begin, end, N, function) * czebyszewFunctionT(x, i, begin, end);
+                //System.out.println(result);
+                }
+            result += r;
+            coefficients.add(r);
         }
+        //System.out.println(coefficients);
         return result;
     }
+
 }

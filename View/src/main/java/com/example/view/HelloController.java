@@ -1,5 +1,6 @@
 package com.example.view;
 
+import com.example.model.Functions;
 import com.example.model.NewtonCotes;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -102,18 +103,28 @@ public class HelloController {
         }
         String function = chooseFunctionVariant();
         XYChart.Series series =  new XYChart.Series();
-        series.setName("Calculated function");
+        XYChart.Series seriesF =  new XYChart.Series();
+        series.setName("Approximation");
+        seriesF.setName("Function");
         int resolution = 500;
         double[] xPos = new double[resolution];
         double[] yPos = new double[resolution];
+        double[] yPosFunction = new double[resolution];
+
+        double error = 0;
+
         double p = firstPoint;
         double increment = (lastPoint - firstPoint) / resolution;
         for (int i = 0; i < resolution; i++) {
             xPos[i] = p;
-            System.out.println(xPos[i]);
             yPos[i] = newtonCotes.calculateFunction(level, xPos[i], intervals, function, firstPoint, lastPoint);
-            //System.out.println(yPos[i]);
+            yPosFunction[i] = Functions.chooseFunction(function, xPos[i]);
             series.getData().add(new XYChart.Data(p, yPos[i]));
+            seriesF.getData().add(new XYChart.Data(p, yPosFunction[i]));
+            double result = yPos[i];
+            double resultF = yPosFunction[i];
+            error += Math.pow(resultF - result, 2);
+
             p += increment;
         }
 
@@ -123,12 +134,16 @@ public class HelloController {
         lineChart.setAnimated(false);
         lineChart.setCreateSymbols(false);
         lineChart.getData().addAll(series);
+        lineChart.getData().addAll(seriesF);
 
         Scene scene = new Scene(lineChart, 500, 400);
         //scene.getStylesheets().add(getClass().getResource("chart.css").toExternalForm());
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.show();
+
+        error = Math.sqrt(error);
+        openWarningDialog("Błąd aproksymacji: " + error);
     }
 
 
